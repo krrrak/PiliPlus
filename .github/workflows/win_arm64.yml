@@ -55,9 +55,10 @@ jobs:
       - name: Install Inno Setup
         run: |
           $installer = Join-Path $env:RUNNER_TEMP 'innosetup.exe'
-          Invoke-WebRequest 'https://files.jrsoftware.org/is/6/innosetup-6.5.4.exe' -OutFile $installer
+          $ProgressPreference = 'SilentlyContinue'
+          Invoke-WebRequest 'https://github.com/jrsoftware/issrc/releases/download/is-6_5_4/innosetup-6.5.4.exe' -OutFile $installer
           $signature = Get-AuthenticodeSignature $installer
-          if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'Jordan Russell') {
+          if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'CN=Pyrsys B\.V\.,') {
             throw 'Inno Setup installer signature is invalid.'
           }
           $installDir = Join-Path $env:RUNNER_TEMP 'inno-setup'
