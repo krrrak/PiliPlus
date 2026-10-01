@@ -2,7 +2,7 @@ name: Build for Windows ARM64 (WoA)
 
 on:
   push:
-    branches: [ci/windows-arm64]
+    branches: [main]
   workflow_dispatch:
   workflow_call:
 
