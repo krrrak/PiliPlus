@@ -23,12 +23,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup native ARM64 Flutter
-        uses: subosito/flutter-action@v2
+      # Windows ARM64 has engine artifacts but no SDK archive for flutter-action.
+      - name: Checkout Flutter SDK source
+        uses: actions/checkout@v4
         with:
-          channel: stable
-          flutter-version-file: pubspec.yaml
-          architecture: arm64
+          repository: flutter/flutter
+          ref: '3.47.5'
+          path: .build-tools/flutter
+          persist-credentials: false
+
+      - name: Configure Flutter SDK path
+        run: |
+          $flutterRoot = Join-Path $env:GITHUB_WORKSPACE '.build-tools/flutter'
+          "FLUTTER_ROOT=$flutterRoot" >> $env:GITHUB_ENV
+          "$flutterRoot/bin" >> $env:GITHUB_PATH
 
       - name: Verify native toolchain
         run: |
@@ -36,6 +44,11 @@ jobs:
             throw 'This workflow requires a native ARM64 runner.'
           }
           flutter config --enable-windows-desktop
+          if ($LASTEXITCODE -ne 0) { throw 'Flutter SDK bootstrap failed.' }
+          $dartVersion = & "$env:FLUTTER_ROOT/bin/cache/dart-sdk/bin/dart.exe" --version 2>&1 | Out-String
+          if ($LASTEXITCODE -ne 0 -or $dartVersion -notmatch 'windows_arm64') {
+            throw "Expected native ARM64 Dart SDK: $dartVersion"
+          }
           flutter doctor -v
           if ($LASTEXITCODE -ne 0) { throw 'Flutter toolchain check failed.' }
 
