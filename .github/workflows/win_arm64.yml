@@ -73,6 +73,19 @@ jobs:
       - name: Apply Flutter and package patches
         run: ./lib/scripts/patch.ps1 windows
 
+      - name: Install ARM64 ANGLE libraries
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: CLANGARM64
+          install: mingw-w64-clang-aarch64-angleproject
+
+      - name: Locate ARM64 MSYS2 prefix
+        shell: msys2 {0}
+        run: echo "MSYS2_ARM64_ROOT=$(cygpath -w /clangarm64)" >> "$GITHUB_ENV"
+
+      - name: Prepare ARM64 media libraries
+        run: ./tool/prepare_windows_arm64_media.ps1 -MsysRoot $env:MSYS2_ARM64_ROOT
+
       - name: Build Windows ARM64
         run: |
           flutter build windows --release --no-pub --dart-define-from-file=pili_release.json
