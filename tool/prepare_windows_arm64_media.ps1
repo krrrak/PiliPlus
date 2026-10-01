@@ -5,6 +5,11 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
+foreach ($header in 'EGL/egl.h', 'GLES2/gl2.h', 'GLES3/gl3.h', 'KHR/khrplatform.h') {
+  if (!(Test-Path "$MsysRoot/include/$header")) {
+    throw "Missing MSYS2 ARM64 header: $header. Install the headers, egl-headers and gles-headers packages."
+  }
+}
 $repoRoot = Split-Path $PSScriptRoot -Parent
 $buildRoot = Join-Path $repoRoot 'build/windows/arm64'
 $mpvRoot = Join-Path $buildRoot 'libmpv'

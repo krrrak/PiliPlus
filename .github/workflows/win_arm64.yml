@@ -77,7 +77,13 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: CLANGARM64
-          install: mingw-w64-clang-aarch64-angleproject
+          install: >-
+            mingw-w64-clang-aarch64-angleproject
+            mingw-w64-clang-aarch64-headers
+            mingw-w64-clang-aarch64-egl-headers
+            mingw-w64-clang-aarch64-gles-headers
+            mingw-w64-clang-aarch64-libc++
+            mingw-w64-clang-aarch64-zlib
 
       - name: Locate ARM64 MSYS2 prefix
         shell: msys2 {0}
