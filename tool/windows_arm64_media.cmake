@@ -20,12 +20,6 @@ apply_standard_settings(${PLUGIN_NAME})
 set_target_properties(${PLUGIN_NAME} PROPERTIES CXX_VISIBILITY_PRESET hidden)
 target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
 target_include_directories(${PLUGIN_NAME} INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/include")
-# The plugin includes ANGLE extension headers directly. Keep the ARM64 ANGLE
-# headers ahead of Flutter's generic EGL headers so EGL_PLATFORM_ANGLE_* is
-# available during compilation.
-target_include_directories(${PLUGIN_NAME} BEFORE PRIVATE "${ANGLE_SRC}/include")
-target_compile_options(${PLUGIN_NAME} PRIVATE
-  "/FI${ANGLE_SRC}/include/EGL/eglext_angle.h")
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin)
 file(GLOB MEDIA_LICENSES "${ANGLE_SRC}/LICENSE.*.txt")
 set(media_kit_libs_windows_video_bundled_libraries
