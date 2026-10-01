@@ -24,6 +24,8 @@ target_include_directories(${PLUGIN_NAME} INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}
 # headers ahead of Flutter's generic EGL headers so EGL_PLATFORM_ANGLE_* is
 # available during compilation.
 target_include_directories(${PLUGIN_NAME} BEFORE PRIVATE "${ANGLE_SRC}/include")
+target_compile_options(${PLUGIN_NAME} PRIVATE
+  "/FI${ANGLE_SRC}/include/EGL/eglext_angle.h")
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin)
 file(GLOB MEDIA_LICENSES "${ANGLE_SRC}/LICENSE.*.txt")
 set(media_kit_libs_windows_video_bundled_libraries
